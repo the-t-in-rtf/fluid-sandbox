@@ -1,12 +1,13 @@
 This package provides a sandbox in which you can learn to work with Fluid using only configuration options.
 
-The interface allows you to enter any additional grade names you want to use (`fluid.component` is already there) and to specific the `options` for the component in JSON format..
+The interface allows you to enter:
 
-If your component expects to work with particular markup, you are expected to enter it in the `markup` input field.
+1.  Any additional HTML markup that is required (for example, for a view component).
+2.  The component options.  NOTE:  The options are entered in the format used for a dynamic component, so you are expected to specify a `type` and `options` at a minimum.
 
 When you press the "Start" button:
 
-1. Any previously created components will be destroyed.
+1. Any previously created dynamic components will be destroyed.
 2. Your markup will be added to the DOM
 3. A component with the selected grade will be created with the selected options.
 
