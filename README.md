@@ -1,6 +1,6 @@
 This package provides a sandbox in which you can learn to work with Fluid using only configuration options.
 
-The interface asks you to enter a base gradeName (`fluid.component` by default) and the `options` for the component in JSON format..
+The interface allows you to enter any additional grade names you want to use (`fluid.component` is already there) and to specific the `options` for the component in JSON format..
 
 If your component expects to work with particular markup, you are expected to enter it in the `markup` input field.
 

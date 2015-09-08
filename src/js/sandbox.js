@@ -17,12 +17,12 @@
             htmlContainer.html(markupInput);
         }
 
-        var options = JSON.parse(that.optionsEditor.getContent());
+        var configJSON = JSON.parse(that.optionsEditor.getContent());
 
-        var dynamicGrades = fluid.sandbox.parseGrades(that.model.grades);
-        options.gradeNames = options.gradeNames ? options.gradeNames.concat(dynamicGrades) : dynamicGrades;
+        if (!configJSON.options.gradeNames) { configJSON.options.gradeNames = []; }
+        configJSON.options.gradeNames.push("fluid.sandbox.destroyable");
 
-        that.events.createComponent.fire(options);
+        that.events.createComponent.fire(configJSON);
     };
 
     fluid.sandbox.parseGrades = function(rawGrades) {
@@ -39,7 +39,7 @@
     };
 
     fluid.sandbox.populateEditors = function(that) {
-        that.optionsEditor.setContent(that.options.defaults.options);
+        that.optionsEditor.setContent(JSON.stringify(that.options.defaults.configJson, null, 2));
         that.htmlEditor.setContent(that.options.defaults.markupInput);
     };
 
@@ -55,25 +55,38 @@
     fluid.defaults("fluid.sandbox", {
         gradeNames: ["fluid.viewComponent"],
         selectors: {
-            grades:       ".sandbox-grades",
             options:      ".sandbox-options",
             markupInput:  ".sandbox-html-input",
             markupOutput: ".sandbox-html-output",
             start:        ".sandbox-start-button"
         },
-        bindings: {
-            grades:      "grades"
-        },
         mergePolicy: {
             defaults: "noexpand"
         },
         defaults: {
-            grades:       "fluid.viewComponent",
-            options:      "{\n  \"container\": \".view-container\",\n  \"selectors\": {\n    \"input\": \".view-input\"\n  },\n  \"listeners\": {\n    \"onCreate.log\": {\n      \"funcName\": \"fluid.log\",\n      \"args\": [\"Hello, World.\"]\n    },\n    \"onCreate.setValue\": {\n      \"funcName\": \"fluid.value\",\n      \"args\": [\"{that}.dom.input\", \"this was set from the options block\"]\n    }\n  }\n}",
+            configJson: {
+                type: "fluid.viewComponent",
+                "container": ".view-container",
+                options: {
+                    "selectors": {
+                        "input": ".view-input"
+                    },
+                    "listeners": {
+                        "onCreate.log": {
+                            "funcName": "fluid.log",
+                            "args": ["Hello, World."]
+                        },
+                        "onCreate.setValue": {
+                            "funcName": "fluid.value",
+                            "args": ["{that}.dom.input", "this was set from the options block"]
+                        }
+                    }
+                }
+            },
             markupInput:  "<div class=\"view-container\">\n\t<input type=\"text\" class=\"view-input\" value=\"default value\"/>\n</div>"
         },
         model: {
-            grades:      "{that}.options.defaults.grades"
+            type:      "{that}.options.defaults.type"
         },
         events: {
             createComponent:   null,
@@ -88,15 +101,12 @@
         dynamicComponents: {
             bucket: {
                 createOnEvent: "createComponent",
-                type:          "fluid.sandbox.destroyable",
-                options:       "{arguments}.0"
+                type:          "{arguments}.0.type",
+                container:     "{arguments}.0.container",
+                options:       "{arguments}.0.options"
             }
         },
         listeners: {
-            "onCreate.applyBindings": {
-                "funcName": "gpii.templates.binder.applyBinding",
-                "args":     "{that}"
-            },
             "onCreate.bindStartButton": [
                 {
                     "this": "{that}.dom.start",
