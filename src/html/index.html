@@ -1,0 +1,106 @@
+<html>
+<head>
+    <title>Fluid Sandbox</title>
+
+    <script type="text/javascript" src="../../node_modules/infusion/src/lib/jquery/core/js/jquery.js"></script>
+
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/FluidDocument.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/Fluid.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/FluidDOMUtilities.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/FluidIoC.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/DataBinding.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/FluidView.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/lib/fastXmlPull/js/fastXmlPull.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/renderer/js/fluidParser.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/renderer/js/fluidRenderer.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/FluidRequests.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/ModelTransformation.js"></script>
+    <script type="text/javascript" src="../../node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js"></script>
+
+    <script type="text/javascript" src="../../node_modules/gpii-handlebars/src/js/client/binder.js"></script>
+
+    <!-- Foundation Styles -->
+    <link rel="stylesheet" href="../../bower_components/foundation/css/foundation.css"/>
+
+    <!-- Code Mirror dependencies -->
+    <link rel="stylesheet" href="../../bower_components/codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" href="../../bower_components/codemirror/addon/lint/lint.css" />
+
+    <script src="../../bower_components/codemirror/lib/codemirror.js"></script>
+    <script src="../../bower_components/codemirror/mode/javascript/javascript.js"></script>
+    <script src="../../bower_components/codemirror/mode/xml/xml.js"></script>
+    <script src="../../bower_components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="../../bower_components/codemirror/addon/lint/lint.js"></script>
+    <script src="../../bower_components/codemirror/addon/lint/json-lint.js"></script>
+    <script src="../../bower_components/jsonlint/lib/jsonlint.js"></script>
+
+    <script type="text/javascript" src="../../bower_components/codemirror-infusion/src/codemirror-infusion.js"></script>
+
+    <!-- The sandbox itself -->
+    <script type="text/javascript" src="../js/sandbox.js"></script>
+    <link rel="stylesheet" href="../css/sandbox.css"/>
+</head>
+<body>
+    <div class="row">
+        <h1>Fluid Sandbox</h1>
+
+        <hr/>
+
+        <p>Use this sandbox to launch a dynamic component using your options.</p>
+
+        <div class="sandbox-container row">
+            <div class="column small-12">
+                <form>
+                    <!-- TODO:  Divide this into panes or frames -->
+
+                    <!-- TODO:  Replace with CodeMirror JSON editing -->
+                    <div class="row">
+                        <div class="column small-3">
+                            Component Options:
+                        </div>
+                        <div class="column small-9">
+                            <div class="sandbox-options"></div>
+                        </div>
+                    </div>
+
+                    <!-- TODO:  Replace with CodeMirror JSON editing -->
+                    <div class="row">
+                        <div class="column small-3">
+                            Html content (optional):
+                        </div>
+                        <div class="column small-9">
+                            <div class="sandbox-html-input"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="column small-3">Additional Sandbox Grades (optional):</div>
+                        <div class="column small-9">
+                            <input type="text" class="sandbox-grades"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="column small-2 right">
+                            <input type="button" class="sandbox-start-button button expand" value="Start"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <hr/>
+
+            <p>If you are working with a view component that requires markup, your markup will appear below.</p>
+
+            <div class="sandbox-html-output"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var sandbox;
+        $(document).ready(function(){
+            sandbox = fluid.sandbox(".sandbox-container");
+        });
+    </script>
+</body>
+</html>

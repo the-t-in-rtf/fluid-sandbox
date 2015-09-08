@@ -1,0 +1,31 @@
+{
+  "name": "fluid-sandbox",
+  "version": "0.0.1",
+  "description": "A sandbox to help write Fluid components without writing any code.",
+  "main": "src/html/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "grunt dedupe-infusion && bower install"
+  },
+  "repository": {
+    "type": "git",
+    "url":  "https://github.com/the-t-in-rtf/fluid-sandbox.git"
+  },
+  "author": "Tony Atkins <tony@raisingthefloor.org>",
+  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/the-t-in-rtf/fluid-sandbox",
+  "dependencies": {
+    "gpii-handlebars":           "git://github.com/the-t-in-rtf/gpii-handlebars.git#b5ff92fe90e399ca73a620f5d431119cdd923570",
+    "grunt":                     "~0.4.4",
+    "grunt-shell":               "0.6.4",
+    "grunt-contrib-jshint":      "~0.9.0",
+    "grunt-jsonlint":            "1.0.4",
+    "grunt-gpii":                "git://github.com/GPII/grunt-gpii.git#58ae055833f437a9e91baedb9f39a22c5fdd727f",
+    "infusion":                  "git://github.com/fluid-project/infusion.git#282f1a318718eed0b0ec060fb8b4ad254417fd7e"
+  },
+  "devDependencies": {
+    "jqUnit":     "git://github.com/fluid-project/node-jqUnit.git#b7ef53aac1ca365bf23d35d255fae874faa88b70",
+    "kettle":     "git://github.com/amb26/kettle.git#33e2826e78315c6d29b13c8ba810f54fef29e8ac",
+    "zombie":     "3.0.15"
+  }
+}
