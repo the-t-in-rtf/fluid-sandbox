@@ -2,7 +2,7 @@
   "name": "fluid-sandbox",
   "version": "0.0.1",
   "description": "A sandbox to help write Fluid components without writing any code.",
-  "main": "src/html/index.html",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "bower install"
@@ -15,17 +15,20 @@
   "license": "BSD-3-Clause",
   "homepage": "https://github.com/the-t-in-rtf/fluid-sandbox",
   "dependencies": {
-    "gpii-binder": "git://github.com/the-t-in-rtf/gpii-binder#f1ade44e0be4990a2400e54061a5557e634a13a8",
+    "codemirror-infusion": "2.1.0",
+    "foundation-sites": "6.2.3",
+    "gpii-binder": "git://github.com/the-t-in-rtf/gpii-binder#5453663ad74a5e490552e16b0d7d626bd4b68a68",
+    "gpii-handlebars": "git://github.com/the-t-in-rtf/gpii-handlebars.git#c675bd16dc3021d61f9a1f49b03cdda4d03a0feb",
     "infusion": "2.0.0-dev.20160519T222603Z.754d2c6"
   },
   "devDependencies": {
-    "eslint": "2.11.1",
+    "eslint": "3.2.2",
     "grunt": "1.0.1",
-    "grunt-eslint": "18.1.0",
-    "grunt-jsonlint": "1.0.4",
+    "fluid-grunt-eslint": "18.1.1",
+    "gpii-webdriver": "git://github.com/the-t-in-rtf/gpii-webdriver#f7178f0ddbb84d182c9590b91ddaedadfb4fb379",
+    "grunt-jsonlint": "1.1.0",
     "istanbul": "0.4.4",
     "kettle": "1.1.0",
     "node-jqunit": "1.1.4"
-
   }
 }

@@ -1,0 +1,53 @@
+<html lang="en">
+    <head>
+        <title>{{title}}</title>
+        {{{deps}}}
+    </head>
+    <body>
+        <form>
+            <div class="sandbox-container row">
+                <h1>Fluid Sandbox: {{title}}</h1>
+
+                <hr/>
+
+                {{{md instructions}}}
+
+                <hr/>
+
+                <ul class="tabs" data-tabs id="example-tabs">
+                    <li class="tabs-title is-active"><a href="#output-tab" aria-selected="true">Component</a></li>
+                    <li class="tabs-title"><a href="#options-tab">Options</a></li>
+                    <li class="tabs-title"><a href="#markup-tab">Markup</a></li>
+                </ul>
+
+                <div class="tabs-content" data-tabs-content="example-tabs">
+                    <div class="tabs-panel is-active" id="output-tab">
+                        <div class="sandbox-html-output"></div>
+                    </div>
+                    <div class="tabs-panel" id="options-tab">
+                        <div class="sandbox-options"></div>
+                    </div>
+                    <div class="tabs-panel" id="markup-tab">
+                        <div class="sandbox-html-input"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="column small-offset-6 small-6 medium-offset-10 medium-2">
+                    <input type="button" class="sandbox-start-button button expanded" value="Reload"/>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            // Required for our menus
+            $(document).foundation()
+
+            var sandboxComponent = fluid.sandbox(".sandbox-container", {
+                componentOptions: {{{jsonify componentOptions}}},
+                markupContent: "{{{markupContent}}}"
+            });
+        </script>
+    </body>
+</html>

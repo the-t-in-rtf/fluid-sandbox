@@ -3,14 +3,12 @@
 // See the README file in this project for usage details.
 //
 /* global fluid, jQuery */
-(function ($) {
+(function () {
     "use strict";
     fluid.registerNamespace("fluid.sandbox");
     fluid.setLogging(true);
 
-    fluid.sandbox.launch = function(that) {
-        that.events.destroyComponents.fire(that);
-
+    fluid.sandbox.launch = function (that) {
         var markupInput = that.htmlEditor.getContent();
         if (markupInput) {
             var htmlContainer = that.locate("markupOutput");
@@ -19,38 +17,14 @@
 
         var configJSON = JSON.parse(that.optionsEditor.getContent());
 
-        if (!configJSON.options.gradeNames) { configJSON.options.gradeNames = []; }
-        configJSON.options.gradeNames.push("fluid.sandbox.destroyable");
+        /*
 
+            This event results in the creation of a single disposable dynamic component.  `configJson` is expected to
+            contain a `type`, `container`, and `options`.
+
+         */
         that.events.createComponent.fire(configJSON);
     };
-
-    fluid.sandbox.parseGrades = function(rawGrades) {
-        var parsedGrades;
-
-        try {
-            parsedGrades = typeof rawGrades === "string" ? JSON.parse(parsedGrades) : rawGrades;
-        }
-        catch (e) {
-            parsedGrades = [ rawGrades ];
-        }
-
-        return parsedGrades;
-    };
-
-    fluid.sandbox.populateEditors = function(that) {
-        that.optionsEditor.setContent(JSON.stringify(that.options.defaults.configJson, null, 2));
-        that.htmlEditor.setContent(that.options.defaults.markupInput);
-    };
-
-    fluid.defaults("fluid.sandbox.destroyable", {
-        gradeNames: ["fluid.component"],
-        listeners: {
-            "{sandbox}.events.destroyComponents": {
-                func: "{that}.destroy"
-            }
-        }
-    });
 
     fluid.defaults("fluid.sandbox", {
         gradeNames: ["fluid.viewComponent"],
@@ -63,34 +37,11 @@
         mergePolicy: {
             defaults: "noexpand"
         },
-        defaults: {
-            configJson: {
-                type: "fluid.viewComponent",
-                "container": ".view-container",
-                options: {
-                    "selectors": {
-                        "input": ".view-input"
-                    },
-                    "listeners": {
-                        "onCreate.log": {
-                            "funcName": "fluid.log",
-                            "args": ["Hello, World."]
-                        },
-                        "onCreate.setValue": {
-                            "funcName": "fluid.value",
-                            "args": ["{that}.dom.input", "this was set from the options block"]
-                        }
-                    }
-                }
-            },
-            markupInput:  "<div class=\"view-container\">\n\t<input type=\"text\" class=\"view-input\" value=\"default value\"/>\n</div>"
-        },
         model: {
             type:      "{that}.options.defaults.type"
         },
         events: {
-            createComponent:   null,
-            destroyComponents: null
+            createComponent: null
         },
         invokers: {
             launch: {
@@ -99,6 +50,7 @@
             }
         },
         dynamicComponents: {
+            // TODO:  Test with non-viewComponent
             bucket: {
                 createOnEvent: "createComponent",
                 type:          "{arguments}.0.type",
@@ -107,17 +59,16 @@
             }
         },
         listeners: {
+            "onCreate.launch": {
+                func: "{that}.launch"
+            },
             "onCreate.bindStartButton": [
                 {
                     "this": "{that}.dom.start",
                     method: "click",
                     args:   "{that}.launch"
                 }
-            ],
-            "onCreate.populateEditors": {
-                "funcName": "fluid.sandbox.populateEditors",
-                "args":     ["{that}"]
-            }
+            ]
         },
         components: {
             optionsEditor: {
@@ -131,7 +82,13 @@
                     indentUnit: 2,
                     tabSize:    2,
                     lineNumbers: true,
-                    gutters: ["CodeMirror-lint-markers"]
+                    gutters: ["CodeMirror-lint-markers"],
+                    listeners: {
+                        "onCreate.populate": {
+                            "func": "{that}.setContent",
+                            "args": ["@expand:JSON.stringify({sandbox}.options.componentOptions, null, 2)"]
+                        }
+                    }
                 }
             },
             htmlEditor: {
@@ -139,7 +96,13 @@
                 container: "{that}.options.selectors.markupInput",
                 options: {
                     mode:       "htmlmixed",
-                    lineNumbers: true
+                    lineNumbers: true,
+                    listeners: {
+                        "onCreate.populate": {
+                            "func": "{that}.setContent",
+                            "args": ["{sandbox}.options.markupContent"]
+                        }
+                    }
                 }
             }
         }

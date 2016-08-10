@@ -1,0 +1,17 @@
+{
+  "type": "fluid.viewComponent",
+  "container": ".view-container",
+  "options": {
+    "selectors": {
+      "input": ".view-input"
+    },
+    "listeners": {
+      "onCreate.log": {
+        "funcName": "fluid.log",
+        "args": [
+          "Hello, World."
+        ]
+      }
+    }
+  }
+}

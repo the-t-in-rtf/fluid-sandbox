@@ -1,0 +1,18 @@
+{
+  "type": "fluid.reorderList",
+  "container": "#demo-selector-listReorderer",
+  "options": {
+    "selectors": {
+      "input": ".view-input"
+    },
+    "styles": {
+      "defaultStyle": "demo-listReorderer-movable-default",
+      "selected": "demo-listReorderer-movable-selected",
+      "dragging": "demo-listReorderer-movable-dragging",
+      "mouseDrag": "demo-listReorderer-movable-mousedrag",
+      "hover": "demo-listReorderer-movable-hover",
+      "dropMarker": "demo-listReorderer-dropMarker",
+      "avatar": "demo-listReorderer-avatar"
+    }
+  }
+}
