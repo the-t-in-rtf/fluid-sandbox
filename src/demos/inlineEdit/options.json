@@ -1,0 +1,4 @@
+{
+  "type":      "demo.inlineEdit",
+  "container": ".demo-inlineEdit-viewport"
+}

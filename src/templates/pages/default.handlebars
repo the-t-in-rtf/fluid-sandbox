@@ -5,45 +5,45 @@
     </head>
     <body>
         <form>
-            <div class="sandbox-container row">
-                <h1>Fluid Sandbox: {{title}}</h1>
+        <div class="sandbox-container row">
+            <h1>Fluid Sandbox: {{title}}</h1>
 
-                <hr/>
-
-                {{{md instructions}}}
-
-                <hr/>
-
-                <ul class="tabs" data-tabs id="example-tabs">
-                    <li class="tabs-title is-active"><a href="#output-tab" aria-selected="true">Component</a></li>
-                    <li class="tabs-title"><a href="#options-tab">Options</a></li>
-                    <li class="tabs-title"><a href="#markup-tab">Markup</a></li>
-                </ul>
-
-                <div class="tabs-content" data-tabs-content="example-tabs">
-                    <div class="tabs-panel is-active" id="output-tab">
-                        <div class="sandbox-html-output"></div>
-                    </div>
-                    <div class="tabs-panel" id="options-tab">
-                        <div class="sandbox-options"></div>
-                    </div>
-                    <div class="tabs-panel" id="markup-tab">
-                        <div class="sandbox-html-input"></div>
-                    </div>
-                </div>
-            </div>
+            <hr/>
 
             <div class="row">
-                <div class="column small-offset-6 small-6 medium-offset-10 medium-2">
+                <div class="column medium-9 small-12">
+                    {{{md instructions}}}
+                </div>
+                <div class="column medium-2 small-6">
                     <input type="button" class="sandbox-start-button button expanded" value="Reload"/>
                 </div>
             </div>
+
+
+            <div class="row">
+                <div class="column small-12">
+                    <div class="fluid-tabs">
+                        <ul>
+                            <li><a href="#one">Output</a></li>
+                            <li><a href="#two">Component Options</a></li>
+                            <li><a href="#three">Markup</a></li>
+                        </ul>
+                        <div id="one">
+                            <div class="sandbox-html-output"></div>
+                        </div>
+                        <div id="two">
+                            <div class="sandbox-options"></div>
+                        </div>
+                        <div id="three">
+                            <div class="sandbox-html-input"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         </form>
 
         <script type="text/javascript">
-            // Required for our menus
-            $(document).foundation()
-
             var sandboxComponent = fluid.sandbox(".sandbox-container", {
                 componentOptions: {{{jsonify componentOptions}}},
                 markupContent: "{{{markupContent}}}"

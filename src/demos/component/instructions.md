@@ -1,0 +1,1 @@
+An example of a plain fluid.component instance.  Try changing the options or markup and hitting "Reload".

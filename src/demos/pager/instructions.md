@@ -1,0 +1,1 @@
+A live demonstration of the fluid pager component.  Try changing the options or markup and hitting "Reload".

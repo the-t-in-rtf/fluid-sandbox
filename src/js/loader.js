@@ -29,6 +29,9 @@
 
     `options.title` is the title for the sandbox, which will be used by default in the document title and a heading.
 
+    `options.basePath` is an optional base path that will be used to construct relative dependency URL.  If this is
+    omitted, full paths are used.
+
  */
 /* eslint-env node */
 "use strict";
@@ -37,13 +40,14 @@ var fluid = require("infusion");
 require("gpii-handlebars");
 require("gpii-binder");
 
-var fs = require("fs");
+var fs   = require("fs");
+var path = require("path");
 
 fluid.registerNamespace("fluid.sandbox.loader");
 
 /*
 
-    The default dependencies used by many of the examples in this package.  You will likely want to append your unique
+    The viewComponent dependencies used by many of the examples in this package.  You will likely want to append your unique
     dependencies to these, for example, using an expander like:
 
     "@expand:fluid.sandbox.loader.defaultDeps.js.concat({that}.options.uniqueJsDeps)"
@@ -61,6 +65,7 @@ fluid.sandbox.loader.defaultDeps = {
         "%infusion/src/components/uploader/css/Uploader.css",
         "%fluid-sandbox/node_modules/codemirror-infusion/node_modules/codemirror/lib/codemirror.css",
         "%fluid-sandbox/node_modules/codemirror-infusion/node_modules/codemirror/addon/lint/lint.css",
+        "%fluid-sandbox/node_modules/infusion/src/lib/jquery/ui/css/default-theme/jquery.ui.theme.css",
         "%fluid-sandbox/src/css/sandbox.css"
     ],
     js: [
@@ -77,12 +82,6 @@ fluid.sandbox.loader.defaultDeps = {
         "%infusion/src/lib/jquery/ui/js/jquery.ui.tabs.js",
         "%infusion/src/lib/jquery/ui/js/jquery.ui.tooltip.js",
         "%infusion/src/framework/core/js/jquery.keyboard-a11y.js",
-        "%fluid-sandbox/node_modules/foundation-sites/dist/foundation.js",
-        "%fluid-sandbox/node_modules/foundation-sites/dist/plugins/foundation.core.js",
-        "%fluid-sandbox/node_modules/foundation-sites/dist/plugins/foundation.util.mediaQuery.js",
-        "%fluid-sandbox/node_modules/foundation-sites/dist/plugins/foundation.util.keyboard.js",
-        "%fluid-sandbox/node_modules/foundation-sites/dist/plugins/foundation.util.timerAndImageLoader.js",
-        "%fluid-sandbox/node_modules/foundation-sites/dist/plugins/foundation.tabs.js",
         "%infusion/src/framework/core/js/FluidDocument.js",
         "%infusion/src/framework/core/js/Fluid.js",
         "%infusion/src/framework/core/js/FluidDOMUtilities.js",
@@ -181,29 +180,36 @@ fluid.sandbox.loader.loadContent = function (path) {
     return fs.readFileSync(resolvedPath, "utf8");
 };
 
+fluid.sandbox.loader.fullOrRelativePath = function (that, originalPath) {
+    var fullPath = fluid.module.resolvePath(originalPath);
+    var finalPath = fullPath;
+
+    if (that.options.basePath) {
+        var resolvedBasePath = fluid.module.resolvePath(that.options.basePath);
+        finalPath = path.relative(resolvedBasePath, fullPath);
+    }
+
+    return finalPath;
+};
+
 fluid.sandbox.loader.generateDependencyString = function (that) {
     var dependencyStrings = [];
 
     fluid.each(that.options.dependencies.js, function (jsDepPath) {
-        var fullJsPath = fluid.module.resolvePath(jsDepPath);
+        var fullJsPath = fluid.sandbox.loader.fullOrRelativePath(that, jsDepPath);
         dependencyStrings.push("<script type=\"text/javascript\" src=\"" + fullJsPath + "\"></script>")
     });
 
     fluid.each(that.options.dependencies.css, function (cssDepPath) {
-        var fullCssPath = fluid.module.resolvePath(cssDepPath);
+        var fullCssPath = fluid.sandbox.loader.fullOrRelativePath(that, cssDepPath);
         dependencyStrings.push("<link rel=\"stylesheet\" href=\"" + fullCssPath + "\"/>")
     });
 
-    // TODO:  Add the ability to generate relative paths based on a base location (i.e. relative to %fluid-sandbox)
     return dependencyStrings.join("\n");
 };
 
 fluid.defaults("fluid.sandbox.loader", {
     gradeNames: ["fluid.component"],
-    title: "Simple ViewComponent Demo",
-    markupContentPath: "%fluid-sandbox/src/demos/default/fixtures.html",
-    instructionsPath: "%fluid-sandbox/src/demos/default/instructions.md",
-    componentOptionsPath: "%fluid-sandbox/src/demos/default/options.json",
     dependencies: fluid.sandbox.loader.defaultDeps,
     handlebars: {
         layout: "main.handlebars",

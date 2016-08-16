@@ -8,7 +8,26 @@
     fluid.registerNamespace("fluid.sandbox");
     fluid.setLogging(true);
 
+    // TODO:  Add demo for progress
+    // TODO:  Add demo for pager
+
+    fluid.registerNamespace("fluid.sandbox.codeMirror.refresh");
+    fluid.sandbox.codeMirror.refresh = function (editor) {
+        editor.refresh();
+    };
+
+    fluid.defaults("fluid.sandbox.codeMirror", {
+        gradeNames: ["fluid.lintingCodeMirror"],
+        invokers: {
+            refresh: {
+                funcName: "fluid.sandbox.codeMirror.refresh",
+                args:     ["{that}.editor"]
+            }
+        }
+    });
+
     fluid.sandbox.launch = function (that) {
+        // TODO: Put fluid.destroyable marker grade back in so that we can destroy any previous dynamic components.
         var markupInput = that.htmlEditor.getContent();
         if (markupInput) {
             var htmlContainer = that.locate("markupOutput");
@@ -41,7 +60,8 @@
             type:      "{that}.options.defaults.type"
         },
         events: {
-            createComponent: null
+            createComponent: null,
+            tabsChanged:     null
         },
         invokers: {
             launch: {
@@ -49,6 +69,7 @@
                 args :    ["{that}"]
             }
         },
+        // TODO:  Talk with Antranig about when (if ever) we'll be able to use a regular component.
         dynamicComponents: {
             // TODO:  Test with non-viewComponent
             bucket: {
@@ -72,10 +93,13 @@
         },
         components: {
             optionsEditor: {
-                type:      "fluid.lintingCodeMirror",
+                type:      "fluid.sandbox.codeMirror",
                 container: "{that}.options.selectors.options",
                 options: {
                     mode: "application/json",
+                    events: {
+                        tabsChanged: "{fluid.sandbox}.events.tabsChanged"
+                    },
                     autoCloseBrackets: true,
                     matchBrackets: true,
                     smartIndent: true,
@@ -87,20 +111,44 @@
                         "onCreate.populate": {
                             "func": "{that}.setContent",
                             "args": ["@expand:JSON.stringify({sandbox}.options.componentOptions, null, 2)"]
+                        },
+                        "tabsChanged.refresh": {
+                            "func": "{that}.refresh"
                         }
                     }
                 }
             },
             htmlEditor: {
-                type:      "fluid.lintingCodeMirror",
+                type:      "fluid.sandbox.codeMirror",
                 container: "{that}.options.selectors.markupInput",
                 options: {
                     mode:       "htmlmixed",
+                    events: {
+                        tabsChanged: "{fluid.sandbox}.events.tabsChanged"
+                    },
                     lineNumbers: true,
                     listeners: {
                         "onCreate.populate": {
                             "func": "{that}.setContent",
                             "args": ["{sandbox}.options.markupContent"]
+                        },
+                        "tabsChanged.refresh": {
+                            "func": "{that}.refresh"
+                        }
+                    }
+                }
+            },
+            tabControls: {
+                type: "fluid.tabs",
+                container: ".fluid-tabs",
+                options: {
+                    tabOptions: {
+                        heightStyle: "content"
+                    },
+                    listeners: {
+                        "tabsshow.notifyParent": {
+                            funcName: "{fluid.sandbox}.events.tabsChanged.fire",
+                            args:     []
                         }
                     }
                 }

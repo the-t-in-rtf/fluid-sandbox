@@ -1,0 +1,13 @@
+{
+  "type": "fluid.component",
+  "options": {
+    "listeners": {
+      "onCreate.log": {
+        "funcName": "fluid.log",
+        "args": [
+          "Hello, World."
+        ]
+      }
+    }
+  }
+}
