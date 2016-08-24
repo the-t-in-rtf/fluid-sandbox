@@ -4,7 +4,8 @@
   "description": "A sandbox to help write Fluid components without writing any code.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generateContent": "node tests/js/generate-content.js"
   },
   "repository": {
     "type": "git",
