@@ -94,7 +94,6 @@ fluid.sandbox.loader.defaultDeps = {
         "%infusion/src/framework/core/js/FluidRequests.js",
         "%infusion/src/framework/core/js/ModelTransformation.js",
         "%infusion/src/framework/core/js/ModelTransformationTransforms.js",
-        "%infusion/src/framework/preferences/js/",
         "%infusion/src/framework/preferences/js/AuxBuilder.js",
         "%infusion/src/framework/preferences/js/Builder.js",
         "%infusion/src/framework/preferences/js/Enactors.js",
@@ -156,20 +155,21 @@ fluid.sandbox.loader.defaultDeps = {
     ]
 };
 
-fluid.sandbox.loader.renderMarkup = function (that) {
+fluid.sandbox.loader.renderMarkup = function (that, customContext) {
     var markupContent = fluid.sandbox.loader.loadContent(that.options.markupContentPath);
     var instructions = fluid.sandbox.loader.loadContent(that.options.instructionsPath);
     var componentOptions = fluid.require(that.options.componentOptionsPath);
 
     var dependencyString = fluid.sandbox.loader.generateDependencyString(that);
-    var context = {
+
+    var context = fluid.merge({}, customContext, {
         deps: dependencyString,
         title: that.options.title,
         // TODO:  Find a better pattern for this
         markupContent: markupContent.replace(/\n/g, "\\n").replace(/"/g, "\\\""),
         instructions: instructions,
         componentOptions: componentOptions
-    };
+    });
 
     return that.renderer.render(that.options.handlebars.page, context);
     // TODO: Make a harness for static renderering, and express middleware to serve a range of content as well.
@@ -180,15 +180,27 @@ fluid.sandbox.loader.loadContent = function (path) {
     return fs.readFileSync(resolvedPath, "utf8");
 };
 
-fluid.sandbox.loader.fullOrRelativePath = function (that, originalPath) {
-    var fullPath = fluid.module.resolvePath(originalPath);
-    var finalPath = fullPath;
-
-    if (that.options.basePath) {
-        var resolvedBasePath = fluid.module.resolvePath(that.options.basePath);
-        finalPath = path.relative(resolvedBasePath, fullPath);
+fluid.sandbox.loader.extractModuleName = function (path) {
+    var matches = path.match(fluid.module.moduleRegex);
+    if (matches && matches[1]) {
+        return matches[1];
     }
+    else {
+        fluid.fail("Cannot determine package-relative path for content '" + path + "'...");
+    }
+};
 
+fluid.sandbox.loader.getRelativePath = function (basePath, originalPath) {
+    var fullPath     = fluid.module.resolvePath(originalPath);
+
+    var moduleName   = fluid.sandbox.loader.extractModuleName(originalPath);
+    var modulePath   = fluid.module.resolvePath("%" + moduleName);
+
+    var relativePath = path.relative(modulePath, fullPath);
+
+    var resolvedBasePath = fluid.module.resolvePath(basePath);
+    var bundledPath = path.resolve(resolvedBasePath, moduleName, relativePath);
+    var finalPath   = path.relative(resolvedBasePath, bundledPath);
     return finalPath;
 };
 
@@ -196,12 +208,12 @@ fluid.sandbox.loader.generateDependencyString = function (that) {
     var dependencyStrings = [];
 
     fluid.each(that.options.dependencies.js, function (jsDepPath) {
-        var fullJsPath = fluid.sandbox.loader.fullOrRelativePath(that, jsDepPath);
+        var fullJsPath = fluid.sandbox.loader.getRelativePath(that.options.basePath, jsDepPath);
         dependencyStrings.push("<script type=\"text/javascript\" src=\"" + fullJsPath + "\"></script>")
     });
 
     fluid.each(that.options.dependencies.css, function (cssDepPath) {
-        var fullCssPath = fluid.sandbox.loader.fullOrRelativePath(that, cssDepPath);
+        var fullCssPath = fluid.sandbox.loader.getRelativePath(that.options.basePath, cssDepPath);
         dependencyStrings.push("<link rel=\"stylesheet\" href=\"" + fullCssPath + "\"/>")
     });
 
@@ -212,13 +224,12 @@ fluid.defaults("fluid.sandbox.loader", {
     gradeNames: ["fluid.component"],
     dependencies: fluid.sandbox.loader.defaultDeps,
     handlebars: {
-        layout: "main.handlebars",
-        page:   "default"
+        page:   "component"
     },
     invokers: {
         render: {
             funcName: "fluid.sandbox.loader.renderMarkup",
-            args:     ["{that}"]
+            args:     ["{that}", "{arguments}.0"]
         }
     },
     components: {

@@ -11,8 +11,7 @@ var localCssDeps = fluid.sandbox.loader.defaultDeps.css.concat([
 ]);
 
 var localJsDeps = fluid.sandbox.loader.defaultDeps.js.concat([
-    "%infusion/src/framework/renderer/js/RendererUtilities.js",
-    "%fluid-sandbox/src/demos/pager/pagerDemo.js"
+    "%infusion/src/framework/renderer/js/RendererUtilities.js"
 ]);
 
 fluid.defaults("fluid.sandbox.loaders.pager", {

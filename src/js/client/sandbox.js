@@ -9,7 +9,6 @@
     fluid.setLogging(true);
 
     // TODO:  Add demo for progress
-    // TODO:  Add demo for pager
 
     fluid.registerNamespace("fluid.sandbox.codeMirror.refresh");
     fluid.sandbox.codeMirror.refresh = function (editor) {
@@ -34,15 +33,23 @@
             htmlContainer.html(markupInput);
         }
 
-        var configJSON = JSON.parse(that.optionsEditor.getContent());
+        that.configJSON = JSON.parse(that.optionsEditor.getContent());
 
         /*
 
-            This event results in the creation of a single disposable dynamic component.  `configJson` is expected to
+            This event results in the creation of a disposable dynamic component.  `configJson` is expected to
             contain a `type`, `container`, and `options`.
 
          */
-        that.events.createComponent.fire(configJSON);
+        that.events.createComponent.fire(that.configJSON);
+
+        // TODO: Discuss how best to clean up the dynamic components without trawling through for name(-key) variations
+        // like bucket, bucket-1, etc.
+
+        // I tried using fluid.construct as an alternative, but there seemed to be no acceptable way to specify the
+        // "container" option for ViewComponent grades.  Non-view components worked wonderfully, including support for
+        // sub-components.
+        // TODO:  Discuss with Antranig
     };
 
     fluid.defaults("fluid.sandbox", {
@@ -69,9 +76,9 @@
                 args :    ["{that}"]
             }
         },
-        // TODO:  Talk with Antranig about when (if ever) we'll be able to use a regular component.
+        // Dynamic component creation seems to strip components and other key materials.
+        // TODO:  Talk with Antranig.
         dynamicComponents: {
-            // TODO:  Test with non-viewComponent
             bucket: {
                 createOnEvent: "createComponent",
                 type:          "{arguments}.0.type",
@@ -91,7 +98,27 @@
                 }
             ]
         },
+        members: {
+            configJSON: {
+                type: "fluid.component"
+            }
+        },
         components: {
+            /*
+                Ideally, we would prefer to have a single instance at any given time, but, if we use the following, we
+                get errors like:
+
+                ASSERTION FAILED:  Failed to resolve reference {arguments} - could not match context with name arguments
+
+                TODO:  Discuss options with Antranig
+
+             */
+            // bucket: {
+            //     createOnEvent: "createComponent",
+            //     type:          "{arguments}.0.type",
+            //     container:     "{arguments}.0.container",
+            //     options:       "{arguments}.0.options"
+            // },
             optionsEditor: {
                 type:      "fluid.sandbox.codeMirror",
                 container: "{that}.options.selectors.options",
@@ -143,12 +170,21 @@
                 container: ".fluid-tabs",
                 options: {
                     tabOptions: {
-                        heightStyle: "content"
+                        // TODO:  Only "content" seems to work decently with the legacy renderer.  Investigate how to refresh the tabs after the dynamic component is launched.
+                        heightStyle: "auto"
+                    },
+                    events: {
+                        createComponent: "{fluid.sandbox}.events.createComponent"
                     },
                     listeners: {
                         "tabsshow.notifyParent": {
                             funcName: "{fluid.sandbox}.events.tabsChanged.fire",
                             args:     []
+                        },
+                        "createComponent.refresh": {
+                            "this":   "{that}.container",
+                            "method": "tabs",
+                            "args":   ["refresh"]
                         }
                     }
                 }

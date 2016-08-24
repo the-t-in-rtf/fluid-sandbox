@@ -1,0 +1,12 @@
+{{#if demoLinks}}
+    <ul class="menu">
+        <li class="menu-text">Fluid Sandbox</li>
+        {{#each demoLinks}}
+            <li {{#equals ../title title}}class="menu-text active"{{/equals}}>
+                <a href="{{href}}">{{title}}</a>
+            </li>
+        {{/each}}
+    </ul>
+{{/if}}
+
+

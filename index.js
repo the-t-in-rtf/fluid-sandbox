@@ -5,6 +5,7 @@ fluid.module.register("fluid-sandbox", __dirname, require);
 
 // Only the loader grades are available from within node.  Everything else is a client-side grade.
 require("./src/js/loader");
+require("./src/js/generator");
 
 require("./src/demos/component/loader");
 require("./src/demos/inlineEdit/loader");

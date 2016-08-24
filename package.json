@@ -4,8 +4,7 @@
   "description": "A sandbox to help write Fluid components without writing any code.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "bower install"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -15,11 +14,12 @@
   "license": "BSD-3-Clause",
   "homepage": "https://github.com/the-t-in-rtf/fluid-sandbox",
   "dependencies": {
-    "codemirror-infusion": "2.1.0",
+    "codemirror-infusion": "git://github.com/the-t-in-rtf/codemirror-infusion#039096a634dc12573e5897385c5d11e939a98a47",
     "foundation-sites": "6.2.3",
     "gpii-binder": "git://github.com/the-t-in-rtf/gpii-binder#5453663ad74a5e490552e16b0d7d626bd4b68a68",
     "gpii-handlebars": "git://github.com/the-t-in-rtf/gpii-handlebars.git#c675bd16dc3021d61f9a1f49b03cdda4d03a0feb",
-    "infusion": "2.0.0-dev.20160519T222603Z.754d2c6"
+    "infusion": "2.0.0-dev.20160519T222603Z.754d2c6",
+    "rimraf": "2.5.4"
   },
   "devDependencies": {
     "eslint": "3.2.2",

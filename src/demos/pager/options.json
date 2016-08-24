@@ -1,7 +1,22 @@
 {
-  "type":      "demo.pager.pagedTable",
+  "type":      "fluid.pagedTable",
   "container": ".demo-pager-container",
   "options": {
+    "components": {
+      "bodyRenderer": {
+        "type": "fluid.table.selfRender",
+        "options": {
+          "selectors": {
+            "root": ".demo-pager-table-data",
+            "user-link": ".demo-user-link",
+            "user-comment": ".demo-user-comment",
+            "user-role": ".demo-user-role",
+            "user-email": ".demo-user-email"
+          },
+          "rendererOptions": {"debugMode": false}
+        }
+      }
+    },
     "model": {
       "pageSize": 20
     },
