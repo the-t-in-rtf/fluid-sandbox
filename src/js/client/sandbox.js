@@ -26,34 +26,39 @@
     });
 
     fluid.sandbox.launch = function (that) {
-        // TODO: Put fluid.destroyable marker grade back in so that we can destroy any previous dynamic components.
+        fluid.destroy(that.options.componentPath);
+
+        // Update the markup before we recreate the dynamic component.
         var markupInput = that.htmlEditor.getContent();
         if (markupInput) {
             var htmlContainer = that.locate("markupOutput");
             htmlContainer.html(markupInput);
         }
 
-        that.configJSON = JSON.parse(that.optionsEditor.getContent());
-
         /*
 
-            This event results in the creation of a disposable dynamic component.  `configJson` is expected to
-            contain a `type`, `container`, and `options`.
+            (Re)create our dynamic component.  `configJson` is expected to correspond to a subcomponent definition, and
+            should contain a `type`, `options`, and (for viewComponent grades) a `container`.
 
          */
-        that.events.createComponent.fire(that.configJSON);
+        fluid.construct(that.options.componentPath, {
+            type: "fluid.sandbox.dynamicComponent",
+            components: {
+                innerComponent: JSON.parse(that.optionsEditor.getContent())
+            }
+        });
 
-        // TODO: Discuss how best to clean up the dynamic components without trawling through for name(-key) variations
-        // like bucket, bucket-1, etc.
-
-        // I tried using fluid.construct as an alternative, but there seemed to be no acceptable way to specify the
-        // "container" option for ViewComponent grades.  Non-view components worked wonderfully, including support for
-        // sub-components.
-        // TODO:  Discuss with Antranig
+        that.events.onRefresh.fire(that);
     };
+
+    // A "marker" grade that can be use to our dynamic component externally.
+    fluid.defaults("fluid.sandbox.dynamicComponent", {
+        gradeNames: ["fluid.component"]
+    });
 
     fluid.defaults("fluid.sandbox", {
         gradeNames: ["fluid.viewComponent"],
+        componentPath: "fluid_sandbox_dynamic_component",
         selectors: {
             options:      ".sandbox-options",
             markupInput:  ".sandbox-html-input",
@@ -67,23 +72,13 @@
             type:      "{that}.options.defaults.type"
         },
         events: {
-            createComponent: null,
-            tabsChanged:     null
+            onRefresh:   null,
+            tabsChanged: null
         },
         invokers: {
             launch: {
                 funcName: "fluid.sandbox.launch",
                 args :    ["{that}"]
-            }
-        },
-        // Dynamic component creation seems to strip components and other key materials.
-        // TODO:  Talk with Antranig.
-        dynamicComponents: {
-            bucket: {
-                createOnEvent: "createComponent",
-                type:          "{arguments}.0.type",
-                container:     "{arguments}.0.container",
-                options:       "{arguments}.0.options"
             }
         },
         listeners: {
@@ -104,25 +99,11 @@
             }
         },
         components: {
-            /*
-                Ideally, we would prefer to have a single instance at any given time, but, if we use the following, we
-                get errors like:
-
-                ASSERTION FAILED:  Failed to resolve reference {arguments} - could not match context with name arguments
-
-                TODO:  Discuss options with Antranig
-
-             */
-            // bucket: {
-            //     createOnEvent: "createComponent",
-            //     type:          "{arguments}.0.type",
-            //     container:     "{arguments}.0.container",
-            //     options:       "{arguments}.0.options"
-            // },
             optionsEditor: {
                 type:      "fluid.sandbox.codeMirror",
                 container: "{that}.options.selectors.options",
                 options: {
+                    // TODO: Make this work with JSON5
                     mode: "application/json",
                     events: {
                         tabsChanged: "{fluid.sandbox}.events.tabsChanged"
@@ -149,7 +130,8 @@
                 type:      "fluid.sandbox.codeMirror",
                 container: "{that}.options.selectors.markupInput",
                 options: {
-                    mode:       "htmlmixed",
+                    input: "contenteditable",
+                    mode: "htmlmixed",
                     events: {
                         tabsChanged: "{fluid.sandbox}.events.tabsChanged"
                     },
@@ -170,18 +152,17 @@
                 container: ".fluid-tabs",
                 options: {
                     tabOptions: {
-                        // TODO:  Only "content" seems to work decently with the legacy renderer.  Investigate how to refresh the tabs after the dynamic component is launched.
                         heightStyle: "auto"
                     },
                     events: {
-                        createComponent: "{fluid.sandbox}.events.createComponent"
+                        onComponentRefresh: "{fluid.sandbox}.events.onRefresh"
                     },
                     listeners: {
                         "tabsshow.notifyParent": {
                             funcName: "{fluid.sandbox}.events.tabsChanged.fire",
                             args:     []
                         },
-                        "createComponent.refresh": {
+                        "onComponentRefresh.refresh": {
                             "this":   "{that}.container",
                             "method": "tabs",
                             "args":   ["refresh"]

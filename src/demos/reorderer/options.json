@@ -2,9 +2,6 @@
   "type": "fluid.reorderList",
   "container": "#demo-selector-listReorderer",
   "options": {
-    "selectors": {
-      "input": ".view-input"
-    },
     "styles": {
       "defaultStyle": "demo-listReorderer-movable-default",
       "selected": "demo-listReorderer-movable-selected",
