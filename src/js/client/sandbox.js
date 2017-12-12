@@ -85,13 +85,11 @@
             "onCreate.launch": {
                 func: "{that}.launch"
             },
-            "onCreate.bindStartButton": [
-                {
-                    "this": "{that}.dom.start",
-                    method: "click",
-                    args:   "{that}.launch"
-                }
-            ]
+            "onCreate.bindStartButton": {
+                "this": "{that}.dom.start",
+                method: "click",
+                args:   "{that}.launch"
+            }
         },
         members: {
             configJSON: {
