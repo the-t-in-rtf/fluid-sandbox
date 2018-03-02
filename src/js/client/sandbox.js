@@ -59,7 +59,7 @@
     fluid.defaults("fluid.sandbox", {
         gradeNames: ["fluid.viewComponent"],
         componentPath: "fluid_sandbox_dynamic_component",
-        selectors: {
+            selectors: {
             options:      ".sandbox-options",
             markupInput:  ".sandbox-html-input",
             markupOutput: ".sandbox-html-output",

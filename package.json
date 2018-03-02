@@ -16,20 +16,21 @@
   "homepage": "https://github.com/the-t-in-rtf/fluid-sandbox",
   "dependencies": {
     "codemirror-infusion": "git://github.com/the-t-in-rtf/codemirror-infusion#039096a634dc12573e5897385c5d11e939a98a47",
-    "foundation-sites": "6.2.3",
-    "gpii-binder": "git://github.com/the-t-in-rtf/gpii-binder#5453663ad74a5e490552e16b0d7d626bd4b68a68",
-    "gpii-handlebars": "git://github.com/the-t-in-rtf/gpii-handlebars.git#c675bd16dc3021d61f9a1f49b03cdda4d03a0feb",
-    "infusion": "2.0.0-dev.20160519T222603Z.754d2c6",
+    "foundation-sites": "6.2.4",
+    "gpii-binder": "1.0.0-dev.20161123T123137Z.a776add",
+    "gpii-handlebars": "1.0.0-dev.20161124T134321Z.9eb2804",
+    "infusion": "2.0.0-dev.20161027T155641Z.0bcd507",
     "rimraf": "2.5.4"
   },
   "devDependencies": {
-    "eslint": "3.2.2",
+    "eslint": "3.10.2",
+    "eslint-config-fluid": "1.0.0",
+    "fluid-grunt-eslint": "18.1.2",
+    "gpii-webdriver": "1.0.0-dev.20161124T133029Z.b454037",
     "grunt": "1.0.1",
-    "fluid-grunt-eslint": "18.1.1",
-    "gpii-webdriver": "git://github.com/the-t-in-rtf/gpii-webdriver#f7178f0ddbb84d182c9590b91ddaedadfb4fb379",
     "grunt-jsonlint": "1.1.0",
-    "istanbul": "0.4.4",
-    "kettle": "1.1.0",
+    "istanbul": "0.4.5",
+    "kettle": "1.2.2",
     "node-jqunit": "1.1.4"
   }
 }
