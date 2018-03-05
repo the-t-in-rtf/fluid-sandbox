@@ -146,7 +146,13 @@ fluid.sandbox.loader.defaultDeps = {
     images: [
         "%infusion/src/components/inlineEdit/images/inline_edit_edit_button_16x16.png",
         "%infusion/src/components/pager/images/arrow-up.png",
-        "%infusion/src/components/pager/images/arrow-dn.png"
+        "%infusion/src/components/pager/images/arrow-dn.png",
+        "%infusion/src/lib/jquery/ui/css/default-theme/images/ui-icons_777777_256x240.png",
+        "%infusion/src/lib/jquery/ui/css/default-theme/images/ui-icons_cc0000_256x240.png",
+        "%infusion/src/lib/jquery/ui/css/default-theme/images/ui-icons_777620_256x240.png",
+        "%infusion/src/lib/jquery/ui/css/default-theme/images/ui-icons_ffffff_256x240.png",
+        "%infusion/src/lib/jquery/ui/css/default-theme/images/ui-icons_555555_256x240.png",
+        "%infusion/src/lib/jquery/ui/css/default-theme/images/ui-icons_444444_256x240.png"
     ]
 };
 
